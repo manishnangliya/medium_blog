@@ -3,6 +3,32 @@ import { PrismaClient } from '@prisma/client/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
 import { sign } from 'hono/jwt';
 
+async function getInfo(c:any) {
+    const prisma = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL,
+    }).$extends(withAccelerate())
+    try {
+        let user = await prisma.user.findFirst({
+            where: {
+                id: c.get('userId'),
+            },
+            select:{
+                id:true,
+                email:true,
+                name:true,
+            }
+            
+        })
+        return c.json({
+            user
+        })
+    } catch (error) {
+        c.status(404);
+        return c.json({
+            message: ["User not registered"]
+        })
+    }
+}
 
 async function signup(c: any) {
     const prisma = new PrismaClient({
@@ -17,7 +43,7 @@ async function signup(c: any) {
     if (user) {
         c.status(404);
         return c.json({
-            message: "User already  registered"
+            message: ["User already  Registered"]
         })
     }
     user = await prisma.user.create({
@@ -50,7 +76,7 @@ async function signin(c: any) {
     if (!user) {
         c.status(404);
         return c.json({
-            message: "User not registered"
+            message: ["User not registered"]
         })
     }
     user = await prisma.user.findFirst({
@@ -62,7 +88,7 @@ async function signin(c: any) {
     if (!user) {
         c.status(404);
         return c.json({
-            message: "incorrect password"
+            message: ["incorrect password"]
         })
     }
     const token = await sign({ id: user.id }, c.env.JWT_SECRET)
@@ -70,4 +96,4 @@ async function signin(c: any) {
         jwt: token
     })
 }
-export { signup, signin };
+export { signup, signin,getInfo };

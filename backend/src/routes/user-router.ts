@@ -1,7 +1,8 @@
 import { Hono } from 'hono'
-import { signin, signup } from '../controllers/user-controller'
+import { getInfo, signin, signup } from '../controllers/user-controller'
 import { validate } from '../middlewares/validate-middleware'
-import { signInInput, signUpInput } from '@manishnangliya/medium-common'
+import {signInInput, signUpInput} from '@manishnangliya/medium-common-validation'
+import { authMiddleware } from '../middlewares/auth-middleware'
 const userRoute = new Hono<{
     Bindings:{
         DATABASE_URL:string,
@@ -11,6 +12,7 @@ const userRoute = new Hono<{
 
 userRoute.post('/signup',validate(signUpInput),signup)
 userRoute.post('/signin',validate(signInInput),signin)
+userRoute.get('/getinfo',authMiddleware,getInfo)
 
 
 export {userRoute}

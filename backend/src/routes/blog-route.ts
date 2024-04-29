@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { authMiddleware } from "../middlewares/auth-middleware";
 import { createBlog, deleteBlog, getAllBlog, getSingleBlog, updateBlog } from "../controllers/blog-controller";
 import { validate } from "../middlewares/validate-middleware";
-import { blogInput } from "@manishnangliya/medium-common";
+import { blogInput } from "@manishnangliya/medium-common-validation";
 const blogRoute = new Hono();
 
 blogRoute.post('/create',authMiddleware,validate(blogInput),createBlog);

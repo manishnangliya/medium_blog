@@ -11,8 +11,9 @@ export const signUpInput = z.object({
         .max(15, { message: "password must be less than length 15" }),
 
     name: z
-        .string()
-        .optional()
+        .string({ required_error: "name is required" })
+        .min(4, { message: "name cannot be empty" })
+        .max(25, { message: "name cannot be empty" })
 })
 
 export const signInInput = z.object({

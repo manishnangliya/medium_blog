@@ -1,5 +1,5 @@
 {
-  "name": "@manishnangliya/medium-common",
+  "name": "@manishnangliya/medium-common-validation",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
@@ -10,6 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@manishnangliya/medium-common-validation": "^1.0.0",
+    "i": "^0.3.7",
+    "npm": "^10.5.2",
     "zod": "^3.22.5"
   }
 }

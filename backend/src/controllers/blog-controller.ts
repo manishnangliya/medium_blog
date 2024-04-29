@@ -21,15 +21,12 @@ async function createBlog(c: any) {
         })
     } catch (error) {
         c.status(409) // conflicting with current state of resource
-        console.log(error);
+        // console.log(error);
         return c.json({
             message:"Post not created"
         })
     }
 }
-
-
-
 
 async function updateBlog(c: any) {
     
@@ -72,11 +69,21 @@ async function getSingleBlog(c: any) {
         const response = await prisma.post.findFirst({
             where: {
                 id: postId
+            },
+            select:{
+                content:true,
+                title:true,
+                id:true,
+                author:{
+                    select:{
+                        name:true
+                    }
+                }
             }
         })
-        console.log(response);
+        
         return c.json({
-            message: response
+            blog: response
         })
     } catch (error) {
         c.status(409);
@@ -90,9 +97,20 @@ async function getAllBlog(c: any) {
         datasourceUrl: c.env.DATABASE_URL,
     }).$extends(withAccelerate())
     try {
-        const responsePost = await prisma.post.findMany()
+        const responsePost = await prisma.post.findMany({
+            select:{
+                content:true,
+                title:true,
+                id:true,
+                author:{
+                    select:{
+                        name:true
+                    }
+                }
+            }
+        })
         return c.json({
-            message: responsePost
+            blogs:responsePost
         })
     } catch (error) {
         c.status(404)
@@ -116,7 +134,6 @@ async function deleteBlog(c: any) {
                 id: postId
             }
         })
-        console.log(response);
         return c.json({
             message: "post deleted"
         })
